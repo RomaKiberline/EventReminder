@@ -1,0 +1,25 @@
+### Health
+GET http://127.0.0.1:8000/api/health
+
+### Register (run once)
+POST http://127.0.0.1:8000/api/auth/register
+Content-Type: application/json
+
+{"email":"student@example.com","password":"DemoPassword2026!"}
+
+### Login; copy access_token from response
+POST http://127.0.0.1:8000/api/auth/login
+Content-Type: application/json
+
+{"email":"student@example.com","password":"DemoPassword2026!"}
+
+### Replace TOKEN_HERE using response from login
+GET http://127.0.0.1:8000/api/categories
+Authorization: Bearer TOKEN_HERE
+
+### Create event
+POST http://127.0.0.1:8000/api/events
+Content-Type: application/json
+Authorization: Bearer TOKEN_HERE
+
+{"title":"Лабораторна №8–10","start_at":"2026-11-02T11:00:00Z","reminder_offsets":[15]}

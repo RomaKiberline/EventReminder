@@ -1,0 +1,4 @@
+Automated backend verification (2026-10-27):
+python -m pytest -q
+5 passed
+Flutter SDK unavailable in this environment; Flutter compilation not verified here.
