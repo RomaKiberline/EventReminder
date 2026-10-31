@@ -65,23 +65,6 @@ classDiagram
 
 ## Як встановити у свій проєкт (Windows PowerShell)
 
-Перш ніж копіювати файли, переконайтеся, що зміни лабораторної №11 закомічено. Пакет містить **лише змінені й нові файли**, не замінює Flutter або існуючі тести №11.
-
-```powershell
-cd "C:\Users\kiber\develop\EventReminder_FullStack"
-git status --short
-# Якщо є незбережені файли лабораторної №11, спершу закомітьте їх.
-git switch -c lab12-refactoring
-# Копіювати ZIP до Downloads, після цього:
-Expand-Archive -Path "$env:USERPROFILE\Downloads\EventReminder_Lab12_Refactoring.zip" -DestinationPath . -Force
-cd backend
-.\.venv\Scripts\python.exe -m pytest -v
-```
-
-Має пройти **22 тести**: 5 тестів API, 10 Unit, 3 інтеграційні та 4 нові для патернів (за умови, що тести №11 вже в `backend/tests`).
-
-Поверніться в корінь проєкту і зробіть коміт **лише після успішної перевірки**:
-
 ```powershell
 cd ..
 git diff main -- backend/app
