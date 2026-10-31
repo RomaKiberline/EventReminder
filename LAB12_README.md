@@ -62,33 +62,3 @@ classDiagram
 ```
 
 Потік: `main.py -> services.py -> EventRepository -> SQLite`; після успішного коміту: `services.py -> EventPublisher -> AuditObserver / LoggingObserver`.
-
-## Як встановити у свій проєкт (Windows PowerShell)
-
-```powershell
-cd ..
-git diff main -- backend/app
-# Перевірити внесені зміни
-git add backend/app backend/tests/test_lab12_patterns.py LAB12_README.md
-git commit -m "Lab 12: refactor EventReminder using Repository and Observer"
-git push -u origin lab12-refactoring
-```
-
-Порівняти архітектуру можна у GitHub через pull request `lab12-refactoring -> main` (не обов'язково одразу зливати гілку).
-
-## Зображення та скриншоти для звіту
-
-- Початковий стан і дерево модулів.
-- `git switch -c lab12-refactoring` і початковий `pytest -v`.
-- UML `lab12_uml_before.png` / `lab12_uml_after.png`.
-- Код `EventRepository` / `EventPublisher`.
-- Результат `pytest -v` після рефакторингу (**22 passed** за перевіркою пакета у тестовому середовищі).
-- `git diff main -- backend/app` та посилання на репозиторій.
-
-## Переваги / недоліки
-
-**Repository:** менше SQL у сервісах, ізольовані запити, чіткіший розподіл відповідальності. Ціна: додатковий модуль і непряма інтерпретація доступу до даних.
-
-**Observer:** нові реакції можна підключати без переписування CRUD; журнал дій переживає видалення події. Ціна: з'являється додаткова таблиця; у production потрібні контроль журналу й надійна черга, якщо сповіщення стануть критичними. Для лабораторної Observer синхронний із обробкою помилок, тож це не гарантована доставка повідомлень.
-
-**Безпека:** JWT-ключі, `.env`, користувацькі SQLite-файли в ZIP не включені.
