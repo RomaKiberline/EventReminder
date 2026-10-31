@@ -11,6 +11,7 @@ from .auth import hash_password, check_password, token_for, current_user, signin
 from .database import get_db, init_db
 from .models import RegisterIn, LoginIn, CategoryIn, EventIn, EventPatch, ExceptionIn, utc_str, validate_aware
 from .services import owned_category, owned_event, event_dict, create_event, edit_event, delete_event, upsert_exception
+from .repositories import event_repository
 
 
 @asynccontextmanager
@@ -122,20 +123,8 @@ def list_events(
     offset: int = Query(default=0, ge=0),
     uid: int = Depends(current_user), db: sqlite3.Connection = Depends(get_db),
 ):
-    sql = "SELECT id FROM events WHERE user_id=?"
-    params: list = [uid]
-    if q:
-        sql += " AND (title LIKE ? OR COALESCE(description,'') LIKE ? OR COALESCE(location,'') LIKE ?)"
-        params.extend([f"%{q}%"] * 3)
-    if category_id is not None:
-        sql += " AND category_id=?"
-        params.append(category_id)
-    if status_filter is not None:
-        sql += " AND status=?"
-        params.append(status_filter)
-    sql += " ORDER BY start_at,id LIMIT ? OFFSET ?"
-    params.extend([limit, offset])
-    return [event_dict(db, uid, row[0]) for row in db.execute(sql, params)]
+    ids = event_repository(db).search_event_ids(uid, q, category_id, status_filter, limit, offset)
+    return [event_dict(db, uid, eid) for eid in ids]
 
 
 @app.post("/api/events", status_code=201, tags=["Events"])
