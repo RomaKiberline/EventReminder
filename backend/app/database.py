@@ -77,6 +77,16 @@ CREATE TABLE IF NOT EXISTS app_settings (
   setting_value TEXT NOT NULL, PRIMARY KEY(user_id,setting_key),
   FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+-- Observer audit trail survives event deletion, but is removed with the user.
+CREATE TABLE IF NOT EXISTS event_audit (
+  id INTEGER PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  event_id INTEGER NOT NULL,
+  action TEXT NOT NULL CHECK(action IN ('CREATED','UPDATED','DELETED')),
+  occurred_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now')),
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_event_audit_user_event ON event_audit(user_id,event_id);
 CREATE INDEX IF NOT EXISTS idx_events_user_start ON events(user_id,start_at);
 CREATE INDEX IF NOT EXISTS idx_events_user_cat ON events(user_id,category_id,start_at);
 CREATE INDEX IF NOT EXISTS idx_reminders_event ON reminders(event_id);
